@@ -7,6 +7,9 @@ import re
 document = Document()
 document.add_heading('Dashboard Documentation', 0)
 
+font = document.styles['Normal'].font
+font.name = 'Calibri'
+
 lumxLocation = 'C:\\Users\hariprasads\\Downloads\\Channel.lumx' #You lumx file location here
 packageLocation = (lumxLocation.split(".")[0])
 outputXLSX = packageLocation + "\\Documentation.xlsx"
@@ -67,6 +70,7 @@ for line in sourceFile:
         row = row + 1
 
 table = document.add_table(rows=row, cols=3)
+table.style = 'Table Grid'
 header_cells = table.rows[0].cells
 header_cells[0].text = "Data Source"
 header_cells[1].text = "Data Source Type"
@@ -99,6 +103,7 @@ for line2 in sourceFile:
             row = row + 1
 
 table = document.add_table(rows=row, cols=2)
+table.style = 'Table Grid'
 header_cells = table.rows[0].cells
 header_cells[0].text = "Component Name"
 header_cells[1].text = "Mapped Data Source"
@@ -124,6 +129,7 @@ for line in sourceFile:
         row = row + 1
 
 table = document.add_table(rows=row, cols=2)
+table.style = 'Table Grid'
 header_cells = table.rows[0].cells
 header_cells[0].text = "Global Variables"
 header_cells[1].text = "Description"
