@@ -140,7 +140,81 @@ for x in range(row-1):
     row_cells[1].text = "Replace this text with description"
 
 workbook.close()
-os.system("start EXCEL.EXE " + outputXLSX)
+
+#code for "on startup"
+sourceFile = open(fileLocation, encoding="utf8")
+canprintlines = False
+bigline = ""
+for line in sourceFile:
+    if line.__contains__('<bi:property name="ON_STARTUP">'):
+        canprintlines = True
+    elif line.__contains__('</bi:property>'):
+        canprintlines = False
+
+    if canprintlines:
+        bigline = bigline + line
+
+bigline = bigline.replace('<bi:property name="ON_STARTUP">', '')
+bigline = bigline.replace("<bi:value><![CDATA[","")
+bigline = bigline.replace(']]></bi:value>', '')
+bigline = bigline.lstrip()
+
+document.add_heading('Scripts', level=1)
+document.add_heading('On Startup', level=2)
+p = document.add_paragraph(bigline)
+
+# code for background processing
+sourceFile = open(fileLocation, encoding="utf8")
+canprintlines = False
+bigline = ""
+for line in sourceFile:
+    if line.__contains__('<bi:property name="ON_BACKGROUND_PROCESSING">'):
+        canprintlines = True
+    elif line.__contains__('</bi:property>'):
+        canprintlines = False
+
+    if canprintlines:
+        bigline = bigline + line
+
+bigline = bigline.replace('<bi:property name="ON_BACKGROUND_PROCESSING">', '')
+bigline = bigline.replace("<bi:value><![CDATA[","")
+bigline = bigline.replace(']]></bi:value>', '')
+bigline = bigline.lstrip()
+
+document.add_heading('On Background Processing', level=2)
+p = document.add_paragraph(bigline)
+
+#all components - experimental
+sourceFile = open(fileLocation, encoding="utf8")
+componentArray = []
+canprintlines = False
+biglineArray = []
+bigline = ""
+index = 0
+for line2 in sourceFile:
+    if re.search('<bi:component name=', line2):
+        componentName = line2.split("name=\"")[1].split("\"")[0]
+        componentArray.append(componentName)
+    if re.search('<bi:property name="ON_', line2):
+        canprintlines = True
+        document.add_heading(componentName, level=2)
+    elif re.search('</bi:property>', line2):
+        canprintlines = False
+        bigline = bigline.replace("<bi:value><![CDATA[", "")
+        bigline = bigline.replace(']]></bi:value>', '')
+        bigline = bigline.lstrip()
+        bigline = bigline.rstrip()
+        document.add_paragraph(bigline)
+        bigline = ""
+    if canprintlines:
+        if line2.__contains__('<bi:property name="ON_'):
+            0
+        else:
+            bigline = bigline + line2
+
+
+
+# os.system("start EXCEL.EXE " + outputXLSX)
 document.save(outputDOCX)
 os.system("start WINWORD.EXE " + outputDOCX)
 print("Opening document and spreadsheet")
