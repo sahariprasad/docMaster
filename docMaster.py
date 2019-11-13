@@ -140,51 +140,9 @@ for x in range(row-1):
     row_cells[1].text = "Replace this text with description"
 
 workbook.close()
-
-#code for "on startup"
-sourceFile = open(fileLocation, encoding="utf8")
-canprintlines = False
-bigline = ""
-for line in sourceFile:
-    if line.__contains__('<bi:property name="ON_STARTUP">'):
-        canprintlines = True
-    elif line.__contains__('</bi:property>'):
-        canprintlines = False
-
-    if canprintlines:
-        bigline = bigline + line
-
-bigline = bigline.replace('<bi:property name="ON_STARTUP">', '')
-bigline = bigline.replace("<bi:value><![CDATA[","")
-bigline = bigline.replace(']]></bi:value>', '')
-bigline = bigline.lstrip()
-
 document.add_heading('Scripts', level=1)
-document.add_heading('On Startup', level=2)
-p = document.add_paragraph(bigline)
 
-# code for background processing
-sourceFile = open(fileLocation, encoding="utf8")
-canprintlines = False
-bigline = ""
-for line in sourceFile:
-    if line.__contains__('<bi:property name="ON_BACKGROUND_PROCESSING">'):
-        canprintlines = True
-    elif line.__contains__('</bi:property>'):
-        canprintlines = False
-
-    if canprintlines:
-        bigline = bigline + line
-
-bigline = bigline.replace('<bi:property name="ON_BACKGROUND_PROCESSING">', '')
-bigline = bigline.replace("<bi:value><![CDATA[","")
-bigline = bigline.replace(']]></bi:value>', '')
-bigline = bigline.lstrip()
-
-document.add_heading('On Background Processing', level=2)
-p = document.add_paragraph(bigline)
-
-#all components - experimental
+#all components
 sourceFile = open(fileLocation, encoding="utf8")
 componentArray = []
 canprintlines = False
@@ -194,27 +152,61 @@ index = 0
 for line2 in sourceFile:
     if re.search('<bi:component name=', line2):
         componentName = line2.split("name=\"")[1].split("\"")[0]
-        componentArray.append(componentName)
+    elif re.search('bi:data_source_alias name=', line2):
+        componentName = line2.split("name=\"")[1].split("\"")[0]
+    elif re.search('<bi:property name="ON_STARTUP">', line2):
+        componentName = "On Startup"
+    elif re.search('<bi:property name="ON_BACKGROUND_PROCESSING">',line2):
+        componentName = "On Background Processing"
     if re.search('<bi:property name="ON_', line2):
         canprintlines = True
         document.add_heading(componentName, level=2)
     elif re.search('</bi:property>', line2):
+        if canprintlines:
+            bigline = bigline.replace("<bi:value><![CDATA[", "")
+            bigline = bigline.replace(']]></bi:value>', '')
+            bigline = bigline.lstrip()
+            bigline = bigline.rstrip()
+            document.add_paragraph(bigline)
+            bigline = ""
+
         canprintlines = False
-        bigline = bigline.replace("<bi:value><![CDATA[", "")
-        bigline = bigline.replace(']]></bi:value>', '')
-        bigline = bigline.lstrip()
-        bigline = bigline.rstrip()
-        document.add_paragraph(bigline)
-        bigline = ""
     if canprintlines:
         if line2.__contains__('<bi:property name="ON_'):
             0
         else:
             bigline = bigline + line2
 
+document.add_heading('Global Script Objects', level=1)
+sourceFile = open(fileLocation, encoding="utf8")
+functionName = ""
+bigline = ""
+canprintlines = False
+for line in sourceFile:
+    if re.search('type="GLOBAL_SCRIPTS_COMPONENT"', line):
+        functionName = (line.split("name=\"")[1].split("\"")[0])
+        document.add_heading(functionName, level=2)
+    if re.search('<bi:property name="FUNCTION_BODY">', line):
+        canprintlines = True
+    elif re.search('</bi:property>', line):
+        if canprintlines:
+            bigline = bigline.replace("<bi:value><![CDATA[", "")
+            bigline = bigline.replace(']]></bi:value>', '')
+            bigline = bigline.lstrip()
+            bigline = bigline.rstrip()
+            document.add_paragraph(bigline)
+            bigline = ""
+
+        canprintlines = False
+    if canprintlines:
+        if line.__contains__('<bi:property name="FUNCTION_BODY">'):
+            0
+        else:
+            bigline = bigline + line
 
 
+# <bi:property name="FUNCTION_BODY">
 # os.system("start EXCEL.EXE " + outputXLSX)
 document.save(outputDOCX)
 os.system("start WINWORD.EXE " + outputDOCX)
-print("Opening document and spreadsheet")
+print("Opening document (" + outputDOCX + ")")
