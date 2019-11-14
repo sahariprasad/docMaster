@@ -210,4 +210,3 @@ for line in sourceFile:
             bigline = bigline + line
 
 document.save(outputDOCX)
-print("Opening document (" + outputDOCX + ")")
