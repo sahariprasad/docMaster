@@ -3,6 +3,7 @@ from docx import Document
 import zipfile
 import re
 import sys
+import shutil
 
 document = Document()
 font = document.styles['Normal'].font
