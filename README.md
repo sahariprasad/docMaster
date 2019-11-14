@@ -5,11 +5,11 @@ This project is for creating a short document on the data source, variable infor
 
 **Steps**
 1. Collect all the .lumx files for which you need to create documents in one directory.
-2. Run _batchDoc.py_ from the terminal.
+2. Run _docMaster.py_ from the terminal.
 ```python
-python batchDoc.py "folder location that contains all the .lumx files"
+python docMaster.py "folder location that contains all the .lumx files"
 ```
 3. Note that the file location should __always__ be in _double quotes_ - this is to ensure that the spaces in the folder path are parse correctly
-4. When run, _batchDoc.py_ will run _docMaster.py_ for every .lumx file that is present in the directory. This will result in multiple terminal windows popping up. This will be fixed in future releases.
+4. When run, _docMaster.py_ will run _docPrinter.py_ for every .lumx file that is present in the directory. This will result in multiple terminal windows popping up. This will be fixed in future releases.
 5. Once done, you will find the documents in the directory that contains the .lumx files.
-6. There will also be directories created in the names of the .lumx files - these are simply the extracted versions of the .lumx files. Feel free to delete them if they aren't required. _docMaster.py_ generates these directories everytime it is run.
+6. There will also be directories created in the names of the .lumx files - these are simply the extracted versions of the .lumx files. Feel free to delete them if they aren't required. _docPrinter.py_ generates these directories everytime it is run.
