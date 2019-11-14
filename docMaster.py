@@ -1,20 +1,35 @@
+import shutil
+
 import xlsxwriter
 import os
 from docx import Document
 import zipfile
 import re
+import sys
 
 document = Document()
-document.add_heading('Dashboard Documentation', 0)
+
 
 font = document.styles['Normal'].font
 font.name = 'Calibri'
 
-lumxLocation = 'C:\\Users\hariprasads\\Downloads\\Channel.lumx' #You lumx file location here
-packageLocation = (lumxLocation.split(".")[0])
-outputXLSX = packageLocation + "\\Documentation.xlsx"
-outputDOCX = packageLocation + "\\Documentation.docx"
+args = sys.argv
+# args.pop(0)
+print(args[1])
 
+lumxLocation = sys.argv[1]
+lumxName = lumxLocation.split("\\")[-1].split('.')[0]
+packageLocation = (lumxLocation.split(".")[0])
+location2 = lumxLocation.split("\\")
+location2.pop(-1)
+location1 = ""
+for parts in location2:
+    location1 = location1 + parts + "\\"
+
+outputXLSX = packageLocation + "\\" + lumxName + ".xlsx"
+outputDOCX = location1 + "\\" + lumxName + ".docx"
+
+document.add_heading(lumxName, 0)
 workbook = xlsxwriter.Workbook(outputXLSX)
 dataSourceWS = workbook.add_worksheet('Data Sources')
 
@@ -158,7 +173,7 @@ for line2 in sourceFile:
         componentName = "On Startup"
     elif re.search('<bi:property name="ON_BACKGROUND_PROCESSING">',line2):
         componentName = "On Background Processing"
-    if re.search('<bi:property name="ON_', line2):
+    if re.search('<bi:property name="ON_', line2) or re.search('<bi:property name="on', line2):
         canprintlines = True
         document.add_heading(componentName, level=2)
     elif re.search('</bi:property>', line2):
@@ -172,7 +187,7 @@ for line2 in sourceFile:
 
         canprintlines = False
     if canprintlines:
-        if line2.__contains__('<bi:property name="ON_'):
+        if line2.__contains__('<bi:property name="ON_') or line2.__contains__('<bi:property name="on'):
             0
         else:
             bigline = bigline + line2
@@ -208,5 +223,5 @@ for line in sourceFile:
 # <bi:property name="FUNCTION_BODY">
 # os.system("start EXCEL.EXE " + outputXLSX)
 document.save(outputDOCX)
-os.system("start WINWORD.EXE " + outputDOCX)
+# os.system("start WINWORD.EXE " + outputDOCX)
 print("Opening document (" + outputDOCX + ")")
