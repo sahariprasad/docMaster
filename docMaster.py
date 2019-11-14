@@ -1,20 +1,14 @@
-import shutil
-
 import xlsxwriter
-import os
 from docx import Document
 import zipfile
 import re
 import sys
 
 document = Document()
-
-
 font = document.styles['Normal'].font
 font.name = 'Calibri'
 
 args = sys.argv
-# args.pop(0)
 print(args[1])
 
 lumxLocation = sys.argv[1]
@@ -48,13 +42,11 @@ fileLocation = packageLocation + "\\apps\\" + defaultApp + "\\content.biapp"
 
 componentName = ""
 dataSource = ""
-
 dataSourceAliasArray = []
 dataSourceTypeArray = []
 dataSourceNameArray = []
 componentArray = []
 globalVariableArray = []
-
 datasourceAlias = ""
 datasourceName = ""
 
@@ -106,7 +98,6 @@ col = 0
 sourceFile = open(fileLocation, encoding="utf8")
 
 for line2 in sourceFile:
-
     if re.search('<bi:component name=', line2):
         componentName = line2.split("name=\"")[1].split("\"")[0]
     if re.search('<bi:property name="DATA_SOURCE_ALIAS_REF"', line2):
@@ -129,7 +120,6 @@ for x in range(row - 1):
     row_cells[1].text = componentArray[x].split(' - ')[1]
 
 globalVariableWS = workbook.add_worksheet('Global Variables')
-
 globalVariableWS.write(0,0, 'Global Variable')
 document.add_heading('Global Variables', level=1)
 row = 0
@@ -219,9 +209,5 @@ for line in sourceFile:
         else:
             bigline = bigline + line
 
-
-# <bi:property name="FUNCTION_BODY">
-# os.system("start EXCEL.EXE " + outputXLSX)
 document.save(outputDOCX)
-# os.system("start WINWORD.EXE " + outputDOCX)
 print("Opening document (" + outputDOCX + ")")
