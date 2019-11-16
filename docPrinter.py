@@ -146,6 +146,8 @@ for line2 in sourceFile:
         componentName = line2.split("name=\"")[1].split("\"")[0]
     elif re.search('<bi:property name="ON_STARTUP">', line2):
         componentName = "On Startup"
+    elif re.search('bi:property name="ON_VAR_SUBMIT"', line2):
+        componentName = "On Variable Initialization"
     elif re.search('<bi:property name="ON_BACKGROUND_PROCESSING">', line2):
         componentName = "On Background Processing"
     if re.search('<bi:property name="ON_', line2) or re.search('<bi:property name="on', line2):
