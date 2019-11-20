@@ -9,7 +9,15 @@ This project is for creating a short document on the data source, variable infor
 ```python
 python docMaster.py "folder location that contains all the .lumx files"
 ```
-3. Note that the file location should __always__ be in _double quotes_ - this is to ensure that the spaces in the folder path are parse correctly
+3. Note that the file location should __always__ be in _double quotes_ - this is to ensure that the spaces in the folder path are parsed correctly
 4. When run, _docMaster.py_ will run _docPrinter.py_ for every .lumx file that is present in the directory. This will result in multiple terminal windows popping up. This will be fixed in future releases.
 5. Once done, you will find the documents in the directory that contains the .lumx files.
 6. There will also be directories created in the names of the .lumx files - these are simply the extracted versions of the .lumx files. Feel free to delete them if they aren't required. _docPrinter.py_ generates these directories everytime it is run.
+
+**Package Dependencies**
+Following packages are required:
+1. python-docx (requries installation)
+2. zipfile (requires installation)
+3. re
+4. sys
+5. os
