@@ -1,6 +1,5 @@
 import sys
 import os
-import shutil
 
 arguments = (sys.argv)
 packageFolder = arguments[1]
