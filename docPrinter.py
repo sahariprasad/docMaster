@@ -174,8 +174,13 @@ for line in sourceFile:
     if re.search('type="GLOBAL_SCRIPTS_COMPONENT"', line):
         functionName = (line.split("name=\"")[1].split("\"")[0])
         document.add_heading(functionName, level=2)
+    if re.search('<bi:property name="FUNCTION"', line):
+        # next(sourceFile)
+        # print(line)
+        document.add_heading((next(sourceFile).split('value="')[1].split('"')[0]), 3)
     if re.search('<bi:property name="FUNCTION_BODY">', line):
         canprintlines = True
+
     elif re.search('</bi:property>', line):
         if canprintlines:
             bigline = stripper(bigline)
